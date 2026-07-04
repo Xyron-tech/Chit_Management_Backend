@@ -13,6 +13,7 @@
   "type": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^16.4.5",
@@ -20,6 +21,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.2.0",
     "mongoose": "^9.6.3",
+    "multer": "^2.2.0",
+    "multer-storage-cloudinary": "^4.0.0",
     "winston": "^3.19.0"
   },
   "devDependencies": {

@@ -5,7 +5,7 @@ const {
   createChit, getAllChits, getChit,
   updateChit, deleteChit,
   addMember, updateMember, deleteMember,
-  markPayment
+  markPayment, markAllPaid, updatePaymentAmount
 } = require('../controllers/chitController');
 
 router.use(protect);
@@ -22,7 +22,11 @@ router.post('/:id/members', addMember);
 router.put('/:id/members/:memberId', updateMember);
 router.delete('/:id/members/:memberId', deleteMember);
 
-// Payment Mark
+// Payment status
 router.put('/:id/members/:memberId/payments/:paymentId', markPayment);
+router.put('/:id/payments/month/:month/mark-all-paid', markAllPaid);
+
+// Payment amount (Tallu chits — auto recalculates future months)
+router.put('/:id/members/:memberId/payments/month/:month/amount', updatePaymentAmount);
 
 module.exports = router;
