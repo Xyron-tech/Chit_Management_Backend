@@ -5,14 +5,13 @@ const paymentSchema = new mongoose.Schema({
   dueDate: { type: Date, required: true },
   amount:  { type: Number, required: true },
   status:  { type: String, enum: ['pending', 'paid'], default: 'pending' },
-  paidAt:  { type: Date, default: null }
+  paidAt:  { type: Date, default: null },
 });
 
 const memberSchema = new mongoose.Schema({
   memberName: { type: String, required: true },
   phone:      { type: String },
-  hasPrized:  { type: Boolean, default: false },
-  prizedMonth:{ type: Number, default: null },
+  prizedMonth:{ type: [Number], default: [] },
   payments:   [paymentSchema]
 });
 

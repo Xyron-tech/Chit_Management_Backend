@@ -149,9 +149,29 @@ const updateMember = async (req, res) => {
     const member = chit.members.id(req.params.memberId);
     if (!member) return res.status(404).json({ message: 'Member not found' });
 
-    const { memberName, phone } = req.body;
+    const { memberName, phone, month, prized } = req.body;
+
     if (memberName) member.memberName = memberName;
     if (phone) member.phone = phone;
+
+    if (month !== undefined && prized !== undefined) {
+      if (prized) {
+        // Check if another member already has this month prized
+        const alreadyTaken = chit.members.find(
+          m => m._id.toString() !== member._id.toString() && m.prizedMonth.includes(month)
+        );
+
+        if (alreadyTaken) {
+          return res.status(400).json({
+            message: `Month ${month} is already prized by ${alreadyTaken.memberName}`
+          });
+        }
+
+        if (!member.prizedMonth.includes(month)) member.prizedMonth.push(month);
+      } else {
+        member.prizedMonth = member.prizedMonth.filter(m => m !== month);
+      }
+    }
 
     await chit.save();
     res.json({ message: 'Member updated ✅', member });
