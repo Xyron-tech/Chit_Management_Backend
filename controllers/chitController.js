@@ -138,9 +138,6 @@ const addMember = async (req, res) => {
   }
 };
 
-// ============================================
-// Update Member (name/phone only)
-// ============================================
 const updateMember = async (req, res) => {
   try {
     const chit = await Chit.findOne({ _id: req.params.id, tenantId: req.user.tenantId });
@@ -154,11 +151,17 @@ const updateMember = async (req, res) => {
     if (memberName) member.memberName = memberName;
     if (phone) member.phone = phone;
 
+    // Ensure prizedMonth is always an array (fixes old docs where it was null)
+    if (!Array.isArray(member.prizedMonth)) {
+      member.prizedMonth = [];
+    }
+
     if (month !== undefined && prized !== undefined) {
       if (prized) {
-        // Check if another member already has this month prized
         const alreadyTaken = chit.members.find(
-          m => m._id.toString() !== member._id.toString() && m.prizedMonth.includes(month)
+          m => m._id.toString() !== member._id.toString() &&
+               Array.isArray(m.prizedMonth) &&
+               m.prizedMonth.includes(month)
         );
 
         if (alreadyTaken) {
