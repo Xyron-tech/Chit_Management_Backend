@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/auth');
-const { getAnalytics } = require('../controllers/chitAnalyticsController');
+const { getAnalytics } = require('../controllers/chitanalyticscontroller');
 
 router.use(protect);
 
