@@ -1,10 +1,6 @@
 const chitService = require('../services/chitService');
 const handleAsync = require('../utils/handleAsync');
 
-// ============================================
-// Chit CRUD
-// ============================================
-
 const createChit = handleAsync(async (req, res) => {
   const chit = await chitService.createChit(req.user.tenantId, req.body, req.file);
   res.status(201).json({ message: 'Chit created ✅', chit });
