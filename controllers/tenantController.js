@@ -1,5 +1,5 @@
 const tenantService = require('../services/tenantservice');
-const handleAsync = require('../utils/handleAsync');
+const handleAsync = require('../utils/handleasync');
 
 const createTenant = handleAsync(async (req, res) => {
   const result = await tenantService.createTenant(req.body);

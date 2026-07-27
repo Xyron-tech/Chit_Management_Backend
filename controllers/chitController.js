@@ -1,5 +1,5 @@
 const chitService = require('../services/chitService');
-const handleAsync = require('../utils/handleAsync');
+const handleAsync = require('../utils/handleasync');
 
 const createChit = handleAsync(async (req, res) => {
   const chit = await chitService.createChit(req.user.tenantId, req.body, req.file);
