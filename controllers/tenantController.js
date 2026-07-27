@@ -1,4 +1,4 @@
-const tenantService = require('../services/tenantService');
+const tenantService = require('../services/tenantservice');
 const handleAsync = require('../utils/handleAsync');
 
 const createTenant = handleAsync(async (req, res) => {
