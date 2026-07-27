@@ -1,5 +1,5 @@
 const authService = require('../services/authService');
-const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/Apierror');
 
 // Small wrapper so we don't repeat try/catch in every handler.
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);

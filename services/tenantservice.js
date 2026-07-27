@@ -1,7 +1,7 @@
 const Tenant = require('../models/Tenant');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/Apierror');
 
 const TRIAL_DAYS = 7;
 

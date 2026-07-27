@@ -1,4 +1,4 @@
-const ApiError = require('./ApiError');
+const ApiError = require('./Apierror');
 
 // Wraps an async controller fn: ApiError -> its statusCode, anything else -> 500.
 // Avoids repeating try/catch in every controller action.

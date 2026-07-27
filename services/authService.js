@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Tenant = require('../models/Tenant');
 const cloudinary = require('../config/cloudinary');
-const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/Apierror');
 
 const generateToken = (user) => {
   return jwt.sign(

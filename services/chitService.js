@@ -1,5 +1,5 @@
 const Chit = require('../models/Chit');
-const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/Apierror');
 const cloudinary = require('../config/cloudinary');
 
 // ============================================
