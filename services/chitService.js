@@ -2,9 +2,6 @@ const Chit = require('../models/Chit');
 const ApiError = require('../utils/Apierror');
 const cloudinary = require('../config/cloudinary');
 
-// ============================================
-// Helpers
-// ============================================
 
 const findChitOrThrow = async (id, tenantId) => {
   const chit = await Chit.findOne({ _id: id, tenantId });

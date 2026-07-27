@@ -1,4 +1,4 @@
-const analyticsService = require('../services/chitAnalyticsService');
+const analyticsService = require('../services/chitanalyticsservice');
 const handleAsync = require('../utils/handleasync');
 
 // @route   GET /api/analytics?month=1-12&year=YYYY (year optional, defaults to current year)
