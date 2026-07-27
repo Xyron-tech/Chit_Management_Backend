@@ -15,6 +15,8 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/tenants', require('./routes/tenants'));
 app.use('/api/chits', require('./routes/chits'));
+app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/dashboard', require('./routes/dashboard'));
 
 app.use(errorHandler);
 

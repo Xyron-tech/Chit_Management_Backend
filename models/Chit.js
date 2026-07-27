@@ -12,6 +12,10 @@ const memberSchema = new mongoose.Schema({
   memberName: { type: String, required: true },
   phone:      { type: String },
   prizedMonth:{ type: [Number], default: [] },
+  photo: {
+    url:      { type: String, default: '' },
+    publicId: { type: String, default: '' },
+  },
   payments:   [paymentSchema]
 });
 
@@ -32,6 +36,10 @@ const chitSchema = new mongoose.Schema({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   status: { type: String, enum: ['active', 'completed'], default: 'active' },
+  image: {
+    url:      { type: String, default: '' },
+    publicId: { type: String, default: '' },
+  },
   members: [memberSchema]
 }, { timestamps: true });
 

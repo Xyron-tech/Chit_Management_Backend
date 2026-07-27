@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/auth');
+const upload = require('../middleware/multiUpload');           // member / profile photos
+const chitImageUpload = require('../middleware/Chitimageupload'); // chit cover photo
 const {
   createChit, getAllChits, getChit,
   updateChit, deleteChit,
@@ -10,16 +12,20 @@ const {
 
 router.use(protect);
 
-// Chit CRUD
-router.post('/', createChit);
+// Chit CRUD — photo (optional) rides along on the same request via multipart/form-data,
+// field name "image". To remove a chit photo without changing anything else,
+// PUT to updateChit with removeImage: true and no file attached.
+router.post('/', chitImageUpload.single('image'), createChit);
 router.get('/', getAllChits);
 router.get('/:id', getChit);
-router.put('/:id', updateChit);
+router.put('/:id', chitImageUpload.single('image'), updateChit);
 router.delete('/:id', deleteChit);
 
-// Member CRUD
-router.post('/:id/members', addMember);
-router.put('/:id/members/:memberId', updateMember);
+// Member CRUD — photo (optional) rides along on the same request via multipart/form-data.
+// To remove a photo without changing anything else, PUT to updateMember with
+// removePhoto: true and no file attached.
+router.post('/:id/members', upload.single('photo'), addMember);
+router.put('/:id/members/:memberId', upload.single('photo'), updateMember);
 router.delete('/:id/members/:memberId', deleteMember);
 
 // Payment status
