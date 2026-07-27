@@ -3,7 +3,7 @@ const router = express.Router();
 
 const authController = require('../controllers/authController');
 const upload = require('../middleware/upload');                     // profile picture — face-crop 400x400
-const uploadCertificate = require('../middleware/uploadcertificate'); // certificates — no crop, own folder
+const uploadCertificate = require('../middleware/Uploadcertificate'); // certificates — no crop, own folder
 
 const { protect } = require('../middleware/auth');
 
