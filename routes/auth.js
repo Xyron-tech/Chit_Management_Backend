@@ -15,6 +15,9 @@ router.get('/me', protect, authController.getMe);
 router.put('/me/profile-picture', protect, upload.single('image'), authController.updateProfile);
 router.delete('/me/profile-picture', protect, authController.deleteProfilePicture);
 
+// ===== Change password =====
+router.put('/me/change-password', protect, authController.changePassword);
+
 // ===== Certificates (uses `uploadCertificate` — no crop, separate folder) =====
 router.post('/me/certificates', protect, uploadCertificate.single('image'), authController.addCertificate);
 router.delete('/me/certificates/:certificateId', protect, authController.deleteCertificate);

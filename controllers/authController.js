@@ -31,6 +31,14 @@ const deleteProfilePicture = asyncHandler(async (req, res) => {
   res.status(200).json({ profilePicture });
 });
 
+// ===== Change password =====
+// Route: PUT /auth/me/change-password
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  await authService.changePassword(req.user.id, { currentPassword, newPassword });
+  res.status(200).json({ message: 'Password updated successfully' });
+});
+
 // ============================================
 // Certificates
 // ============================================
@@ -56,6 +64,7 @@ module.exports = {
   getMe,
   updateProfile,
   deleteProfilePicture,
+  changePassword,
   addCertificate,
   deleteCertificate,
 };

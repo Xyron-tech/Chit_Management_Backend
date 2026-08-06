@@ -27,13 +27,11 @@ const createTenant = async ({ name, subdomain, email, adminName, password }) => 
     isActive: true,
   });
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   const user = await User.create({
     tenantId: tenant._id,
     name: adminName,
     email,
-    password: hashedPassword,
+    password, // plain text — the User model's pre('save') hook hashes this automatically
     role: 'tenant_admin',
   });
 

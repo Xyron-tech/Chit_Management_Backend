@@ -105,6 +105,39 @@ const deleteProfilePicture = async (userId) => {
 };
 
 // ============================================
+// Change password
+// ============================================
+
+const changePassword = async (userId, { currentPassword, newPassword }) => {
+  if (!currentPassword || !newPassword) {
+    throw new ApiError(400, 'Current password and new password are required');
+  }
+
+  if (newPassword.length < 6) {
+    throw new ApiError(400, 'New password must be at least 6 characters');
+  }
+
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, 'User not found');
+
+  const isMatch = await user.matchPassword(currentPassword);
+  if (!isMatch) throw new ApiError(401, 'Current password is incorrect');
+
+  const isSameAsOld = await user.matchPassword(newPassword);
+  if (isSameAsOld) {
+    throw new ApiError(400, 'New password must be different from the current password');
+  }
+
+  // The pre('save') hook on the User model hashes `password`
+  // automatically whenever it's modified — same hook used for
+  // registration — so we just assign the plain new password here.
+  user.password = newPassword;
+  await user.save();
+
+  return { success: true };
+};
+
+// ============================================
 // Certificates
 // ============================================
 
@@ -148,6 +181,7 @@ module.exports = {
   getMe,
   updateProfile,
   deleteProfilePicture,
+  changePassword,
   addCertificate,
   deleteCertificate,
 };
