@@ -1,6 +1,6 @@
 const chitService = require('../services/chitService');
 const handleAsync = require('../utils/handleasync');
-const { streamMonthStatementPdf } = require('../utils/pdfbuilder');
+const { streamMonthStatementPdf } = require('../utils/Pdfbuilder');
 
 
 const createChit = handleAsync(async (req, res) => {
