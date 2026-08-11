@@ -1,5 +1,7 @@
 const chitService = require('../services/chitService');
 const handleAsync = require('../utils/handleasync');
+const { streamMonthStatementPdf } = require('../utils/pdfBuilder');
+
 
 const createChit = handleAsync(async (req, res) => {
   const chit = await chitService.createChit(req.user.tenantId, req.body, req.file);
@@ -81,9 +83,34 @@ const updatePaymentAmount = handleAsync(async (req, res) => {
   res.json({ message: 'Amount updated & future months recalculated ✅', chit });
 });
 
+const downloadMonthPdf = async (req, res) => {
+  try {
+    const { id, month } = req.params;
+    const monthNum = parseInt(month, 10);
+
+    // Fixed: this was req.user?._id (the user's own id) — but the Chit
+    // model scopes by tenantId, not by the individual user's id. Every
+    // other function above already uses req.user.tenantId; this one just
+    // hadn't been updated to match, which is why the query never matched
+    // and always threw "Chit not found".
+    const statement = await chitService.getMonthStatement(id, monthNum, req.user.tenantId);
+
+    const filename = `${(statement.chit.chitName || 'chit').replace(/[^\w\-]+/g, '_')}-month-${monthNum}.pdf`;
+    streamMonthStatementPdf(res, filename, statement);
+  } catch (err) {
+    console.error('PDF generation failed:', err);
+    if (!res.headersSent) {
+      const status = err.statusCode || 500;
+      res.status(status).json({ message: err.message || 'Unable to generate PDF' });
+    } else {
+      res.end();
+    }
+  }
+};
+
 module.exports = {
   createChit, getAllChits, getChit,
   updateChit, deleteChit,
   addMember, updateMember, deleteMember,
-  markPayment, markAllPaid, updatePaymentAmount,
+  markPayment, markAllPaid, updatePaymentAmount, downloadMonthPdf,
 };

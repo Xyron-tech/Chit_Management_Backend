@@ -279,9 +279,66 @@ const updatePaymentAmount = async (id, tenantId, month, amount) => {
   return chit;
 };
 
+const getPerMemberAmount = (chit) => {
+  if (chit.chitType === 'tallu') return chit.installmentAmount || 0;
+  const memberCount = chit.members?.length > 0 ? chit.members.length : 1;
+  const installment = chit.installmentAmount || 0;
+  const commission = chit.commission || 0;
+  const commissionAmt = (installment * commission) / 100;
+  return (installment + commissionAmt) / memberCount;
+};
+
+// ---- PDF month statement (fixed: tenantId, not userId — matches every
+// other function in this file, and the field that actually exists on Chit) ----
+const getMonthStatement = async (chitId, monthNum, tenantId) => {
+  if (!monthNum || monthNum < 1) {
+    throw new ApiError(400, 'Invalid month');
+  }
+
+  const chit = await Chit.findOne({ _id: chitId, tenantId }).lean();
+  if (!chit) {
+    throw new ApiError(404, 'Chit not found');
+  }
+
+  const members = chit.members || [];
+
+  const rows = members.map((m) => {
+    const payment = (m.payments || []).find((p) => p.month === monthNum);
+    const isPrized = Array.isArray(m.prizedMonth) && m.prizedMonth.includes(monthNum);
+    const amt =
+      chit.chitType === 'tallu'
+        ? payment?.amount ?? chit.installmentAmount
+        : payment?.amount ?? getPerMemberAmount(chit);
+    return { member: m, payment, isPrized, amt };
+  });
+
+  const paidCount = rows.filter((r) => r.payment?.status === 'paid').length;
+  const pendingCount = rows.filter((r) => r.payment?.status === 'pending').length;
+  const collected = rows
+    .filter((r) => r.payment?.status === 'paid')
+    .reduce((sum, r) => sum + (r.payment?.amount || 0), 0);
+  const prized = rows.find((r) => r.isPrized)?.member || null;
+  // Amount the prized member received = sum of everyone's payments for the month
+  // (same logic as getPrizedAmount on the frontend).
+  const prizeReceived = rows.reduce((sum, r) => sum + (r.payment?.amount || 0), 0);
+
+  return {
+    chit,
+    monthNum,
+    rows,
+    paidCount,
+    pendingCount,
+    collected,
+    prized,
+    prizeReceived,
+  };
+};
+
+
 module.exports = {
   createChit, getAllChits, getChit,
   updateChit, deleteChit,
   addMember, updateMember, deleteMember,
-  markPayment, markAllPaid, updatePaymentAmount,
+  markPayment, markAllPaid, updatePaymentAmount, getMonthStatement,
+  getPerMemberAmount,
 };
